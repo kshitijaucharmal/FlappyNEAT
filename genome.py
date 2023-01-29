@@ -3,7 +3,7 @@ from gene import Gene
 import random
 
 class Genome:
-    def __init__(self, gh) -> None:
+    def __init__(self, gh):
         self.gh = gh
         self.n_inputs = gh.n_inputs
         self.n_outputs = gh.n_outputs
@@ -65,7 +65,34 @@ class Genome:
         if len(self.genes) == 0:
             self.add_gene()
 
-    def get_info(self):
+        if random.random() < 0.2:
+            self.gh.highest_hidden += 1
+
+        n = Node(self.total_nodes, random.randint(2, self.gh.highest_hidden))
+        self.total_nodes += 1
+
+        g = random.choice(self.genes)
+        l1 = g.in_node.layer
+        l2 = g.out_node.layer
+        if l2 == 1:
+            l2 = 1000000
+
+        while l1 > n.layer or l2 < n.layer:
+            g = random.choice(self.genes)
+            l1 = g.in_node.layer
+            l2 = g.out_node.layer
+            if l2 == 1:
+                l2 = 1000000
+
+        self.connect_nodes(g.in_node, n)
+        self.connect_nodes(n, g.out_node)
+        self.genes[-1].weight = 1.0
+        self.genes[-2].weight = g.weight
+        g.enabled = False
+        self.nodes.append(n)
+        pass
+
+    def get_info(self) -> str:
         s = 'Genome -----------------------\n'
         for g in self.genes:
             s += g.get_info()
@@ -75,3 +102,26 @@ class Genome:
 
     def __str__(self) -> str:
         return self.get_info()
+
+    def show(self, ds):
+        # Set Positions
+        w, h = ds.get_size()
+        vert_gap = h / (self.n_inputs + 1)
+        for i in range(self.n_inputs):
+            self.nodes[i].pos = [50, self.nodes[i].number * vert_gap + vert_gap]
+        vert_gap = h / (self.n_outputs + 1)
+        for i in range(self.n_inputs, self.n_inputs + self.n_outputs):
+            self.nodes[i].pos = [w - 50, (self.nodes[i].number - self.n_inputs) * vert_gap + vert_gap]
+
+        # For hidden nodes
+        hidden_nodes = self.nodes[(self.n_inputs + self.n_outputs):]
+        vert_gap = h / (len(hidden_nodes) + 1)
+        for i, n in enumerate(hidden_nodes):
+            if n.pos[0] == 0:
+                n.pos = [w / 2, n.number - (self.n_inputs + self.n_outputs + 1) * vert_gap + vert_gap]
+
+        for g in self.genes:
+            g.show(ds)
+        for n in self.nodes:
+            n.show(ds)
+        pass

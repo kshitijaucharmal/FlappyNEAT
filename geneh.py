@@ -6,6 +6,7 @@ class GeneHistory:
         self.n_outputs = n_outputs
         self.all_genes = []
         self.global_inno = 0
+        self.highest_hidden = 2
         pass
 
     def exists(self, n1, n2):

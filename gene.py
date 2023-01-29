@@ -1,4 +1,5 @@
 import random
+import pygame
 
 class Gene:
     def __init__(self, i, o):
@@ -7,6 +8,8 @@ class Gene:
         self.weight = random.random() * 4 - 2
         self.inno = -1
         self.enabled = True
+
+        self.color = (0, 255, 0)
         pass
 
     def clone(self):
@@ -26,4 +29,13 @@ class Gene:
 
     def __str__(self) -> str:
         return self.get_info()
-    pass
+
+    def show(self, ds):
+        if self.weight > 0:
+            self.color = (255, 0, 0)
+        else:
+            self.color = (0, 0, 255)
+        if not self.enabled:
+            self.color = (0, 255, 0)
+        pygame.draw.line(ds, self.color, self.in_node.pos, self.out_node.pos, 2)
+        pass
