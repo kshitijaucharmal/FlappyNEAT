@@ -18,6 +18,15 @@ class Gene:
         g.enabled = self.enabled
         g.inno = self.inno
         return g
+    
+    def mutate(self):
+        if random.random() < 0.1:
+            self.weight = random.random() * 4 - 2
+        else:
+            self.weight += random.uniform(-0.2, 0.2)
+            # Clamping
+            self.weight = self.weight if self.weight < 2 else 2
+            self.weight = self.weight if self.weight > -2 else -2
 
     def get_info(self):
         s = str(self.inno) + "] "

@@ -58,6 +58,19 @@ class Genome:
 
         self.connect_nodes(n1, n2)
         pass
+    
+    def mutate(self):
+        if len(self.genes) == 0:
+            self.add_gene()
+
+        if random.random() < 0.8:
+            for i in range(len(self.genes)):
+                self.genes[i].mutate()
+        if random.random() < 0.08:
+            self.add_gene()
+        if random.random() < 0.02:
+            self.add_node()
+        pass
 
     def connect_genes(self):
         for i in range(len(self.nodes)):

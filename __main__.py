@@ -36,6 +36,10 @@ def mainloop():
                     print(g)
                 if event.key == pygame.K_p:
                     print(g)
+                if event.key == pygame.K_m:
+                    g.mutate()
+                    print(g.get_outputs([0.1, 0.2, 0.3, 0.4]))
+                    print(g)
                 if event.key == pygame.K_o:
                     print(g.get_outputs([0.1, 0.2, 0.3, 0.4]))
                     print(g)
