@@ -1,5 +1,3 @@
-
-
 class GeneHistory:
     def __init__(self, n_inputs, n_outputs):
         self.n_inputs = n_inputs

@@ -28,10 +28,8 @@ class Genome:
         return False
 
     def connect_nodes(self, n1, n2):
-        n1layer = n1.layer
-        n2layer = n2.layer
-        if n2.layer == 1:
-            n2layer = 1000000
+        n1layer = n1.layer if n1.layer != 1 else 1000000
+        n2layer = n2.layer if n2.layer != 1 else 1000000
 
         if n1layer > n2layer:
             n1, n2 = n2, n1
@@ -60,6 +58,42 @@ class Genome:
 
         self.connect_nodes(n1, n2)
         pass
+
+    def connect_genes(self):
+        for i in range(len(self.nodes)):
+            self.nodes[i].in_genes.clear()
+
+        # Add in_genes
+        for i in range(len(self.genes)):
+            self.genes[i].out_node.in_genes.append(self.genes[i])
+        pass
+
+    def get_outputs(self, inputs):
+        if len(inputs) != self.n_inputs:
+            print('Wrong number of inputs')
+            return [-1]
+
+        for i in range(self.n_inputs):
+            self.nodes[i].output = inputs[i]
+
+        self.connect_genes()
+
+        for l in range(2, self.gh.highest_hidden + 1):
+            nodes_in_layer = []
+            for n in range(len(self.nodes)):
+                if self.nodes[n].layer == l:
+                    nodes_in_layer.append(self.nodes[n])
+
+            for n in range(len(nodes_in_layer)):
+                nodes_in_layer[n].calculate()
+
+        final_outputs = []
+        for n in range(self.n_inputs, self.n_inputs + self.n_outputs):
+            # print(self.nodes[n].number, self.nodes[n].layer)
+            self.nodes[n].calculate()
+            final_outputs.append(self.nodes[n].output)
+
+        return final_outputs
 
     def add_node(self):
         if len(self.genes) == 0:
@@ -100,28 +134,26 @@ class Genome:
         s += '------------------------------'
         return s
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.get_info()
 
     def show(self, ds):
         # Set Positions
         w, h = ds.get_size()
-        vert_gap = h / (self.n_inputs + 1)
+        vert_gap = h / (self.n_inputs+1)
         for i in range(self.n_inputs):
-            self.nodes[i].pos = [50, self.nodes[i].number * vert_gap + vert_gap]
-        vert_gap = h / (self.n_outputs + 1)
-        for i in range(self.n_inputs, self.n_inputs + self.n_outputs):
-            self.nodes[i].pos = [w - 50, (self.nodes[i].number - self.n_inputs) * vert_gap + vert_gap]
+            self.nodes[i].pos = [30, self.nodes[i].number * vert_gap + vert_gap]
+        vert_gap = h / (self.n_outputs+1)
+        for i in range(self.n_inputs, self.n_inputs+self.n_outputs):
+            self.nodes[i].pos = [w - 30, (self.nodes[i].number - self.n_inputs) * vert_gap + vert_gap]
+        vert_gap = h / ((len(self.nodes) - (self.n_inputs + self.n_outputs)) + 1)
+        for i in range(self.n_inputs+self.n_outputs, len(self.nodes)):
+            self.nodes[i].pos = [w/2, (self.nodes[i].number - self.n_inputs - self.n_outputs) * vert_gap + vert_gap]
 
-        # For hidden nodes
-        hidden_nodes = self.nodes[(self.n_inputs + self.n_outputs):]
-        vert_gap = h / (len(hidden_nodes) + 1)
-        for i, n in enumerate(hidden_nodes):
-            if n.pos[0] == 0:
-                n.pos = [w / 2, n.number - (self.n_inputs + self.n_outputs + 1) * vert_gap + vert_gap]
-
+        # Show Genes
         for g in self.genes:
             g.show(ds)
+        # Show nodes
         for n in self.nodes:
             n.show(ds)
         pass

@@ -36,8 +36,7 @@ class Node:
         s = 0
         for g in self.in_genes:
             if g.enabled:
-                s += g.in_node * g.weight
-        
+                s += g.in_node.output * g.weight
         self.output = self.sigmoid(s)
         pass
 
