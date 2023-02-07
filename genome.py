@@ -1,5 +1,6 @@
 from node import Node
 from gene import Gene
+
 import random
 
 class Genome:
@@ -102,11 +103,42 @@ class Genome:
 
         final_outputs = []
         for n in range(self.n_inputs, self.n_inputs + self.n_outputs):
-            # print(self.nodes[n].number, self.nodes[n].layer)
             self.nodes[n].calculate()
             final_outputs.append(self.nodes[n].output)
 
         return final_outputs
+
+    def calculate_compatibility(self, partner):
+        p1_highest_inno = max([(a.inno) for a in self.genes])
+        p2_highest_inno = max([(a.inno) for a in partner.genes])
+
+        matching = 0
+        disjoint = 0
+        excess = 0
+
+        c1 = 1.0
+        c2 = 1.0
+        c3 = 0.4
+
+        flag = 0
+
+        highest_inno = max(p1_highest_inno, p2_highest_inno)
+        
+        for i in range(highest_inno):
+            e1 = self.exists(i)
+            e2 = partner.exists(i)
+            if e1 and e2:
+                matching += 1
+                flag = i
+                continue
+            if e1 or e2:
+                disjoint += 1
+
+        # Wrong
+        excess = highest_inno - flag
+        disjoint -= excess
+        print(matching, disjoint, excess)
+        pass
 
     def add_node(self):
         if len(self.genes) == 0:
