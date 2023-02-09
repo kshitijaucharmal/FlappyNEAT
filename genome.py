@@ -108,6 +108,12 @@ class Genome:
 
         return final_outputs
 
+    def get_weight(self, inno):
+        for g in self.genes:
+            if g.inno == inno:
+                return g.weight
+        return -1
+
     def calculate_compatibility(self, partner):
         p1_highest_inno = max([(a.inno) for a in self.genes])
         p2_highest_inno = max([(a.inno) for a in partner.genes])
@@ -123,6 +129,7 @@ class Genome:
         flag = 0
 
         highest_inno = max(p1_highest_inno, p2_highest_inno)
+        total_weights = 0
         
         for i in range(highest_inno):
             e1 = self.exists(i)
@@ -130,15 +137,26 @@ class Genome:
             if e1 and e2:
                 matching += 1
                 flag = i
+                total_weights += self.get_weight(i) - partner.get_weight(i)
                 continue
-            if e1 or e2:
-                disjoint += 1
 
-        # Wrong
+        disjoint = (flag+1) - matching
         excess = highest_inno - flag
-        disjoint -= excess
+
+        if matching == 0:
+            matching = 1
+        avg_weights = total_weights / matching
+
+        N = 1 if highest_inno < 20 else highest_inno
+        excess_coeff = c1 * excess / N
+        disjoint_coeff = c2 * disjoint / N
+        weight_coeff = c3 * avg_weights
+
+        cd = excess_coeff + disjoint_coeff + weight_coeff
+
         print(matching, disjoint, excess)
-        pass
+        print("Compatibility Distance", cd)
+        return cd
 
     def add_node(self):
         if len(self.genes) == 0:
