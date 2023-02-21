@@ -18,7 +18,7 @@ ds = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Test')
 
 def setup():
-    brains[0].calculate_compatibility(brains[1])
+    # brains[0].calculate_compatibility(brains[1])
     pass
 
 def keydown_event(brain, event):
