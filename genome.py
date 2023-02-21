@@ -13,6 +13,8 @@ class Genome:
         self.nodes = []
         self.genes = []
 
+        self.fitness = random.uniform(-2, 2)
+
         for _ in range(self.n_inputs):
             self.nodes.append(Node(self.total_nodes, 0))
             self.total_nodes += 1
@@ -115,8 +117,16 @@ class Genome:
         return -1
 
     def calculate_compatibility(self, partner):
-        p1_highest_inno = max([(a.inno) for a in self.genes])
-        p2_highest_inno = max([(a.inno) for a in partner.genes])
+        try:
+            p1_highest_inno = max([(a.inno) for a in self.genes])
+        except:
+            p1_highest_inno = 0
+
+        try:
+            p2_highest_inno = max([(a.inno) for a in partner.genes])
+        except:
+            p2_highest_inno = 0
+        highest_inno = max(p1_highest_inno, p2_highest_inno)
 
         matching = 0
         disjoint = 0
@@ -128,7 +138,6 @@ class Genome:
 
         flag = 0
 
-        highest_inno = max(p1_highest_inno, p2_highest_inno)
         total_weights = 0
         
         for i in range(highest_inno):
@@ -154,8 +163,8 @@ class Genome:
 
         cd = excess_coeff + disjoint_coeff + weight_coeff
 
-        print(matching, disjoint, excess)
-        print("Compatibility Distance", cd)
+        # print(matching, disjoint, excess)
+        # print("Compatibility Distance", cd)
         return cd
 
     def add_node(self):
