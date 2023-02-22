@@ -3,10 +3,15 @@ import math
 
 class Node:
     def __init__(self, n, l):
+        # Number in the network
         self.number = n
+        # On Layer
         self.layer = l
+        # final output to pass on
         self.output = 0
+        # all genes coming to this node
         self.in_genes = []
+        # Sigmoid activation
         self.sigmoid = lambda x : 1 / (1 + math.exp(-x))
 
         # For Showing
@@ -23,11 +28,13 @@ class Node:
 
         pass
 
+    # Clone the node
     def clone(self):
         n = Node(self.number, self.layer)
         n.output = self.output
         return n
 
+    # Calculate output value
     def calculate(self):
         if self.layer == 0:
             print('No calculations for first layer')
@@ -40,6 +47,7 @@ class Node:
         self.output = self.sigmoid(s)
         pass
 
+    # Only for showing
     def show(self, ds):
         pygame.draw.circle(ds, self.bcolor, self.pos, self.radius + self.border_radius)
         pygame.draw.circle(ds, self.color, self.pos, self.radius)

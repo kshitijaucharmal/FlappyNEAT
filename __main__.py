@@ -8,7 +8,7 @@ from genome import Genome
 from geneh import GeneHistory
 from population import Population
 
-population = Population(100, 4, 2)
+population = Population(100, 6, 1)
 
 WIDTH = 400
 HEIGHT = 400
@@ -16,6 +16,8 @@ HEIGHT = 400
 pygame.display.init()
 ds = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Test')
+
+sample_inputs = [(random.random()) for a in range(population.n_inputs)]
 
 def setup():
     # brains[0].calculate_compatibility(brains[1])
@@ -36,17 +38,17 @@ def keydown_event(brain, event):
     if event.key == K_m:
         brain.mutate()
     if event.key == K_o:
-        print(brain.get_outputs([0.1, 0.2, 0.3, 0.4]))
+        print(brain.get_outputs(sample_inputs))
 
     if event.key == K_s:
         population.plot_cluster()
-        # population.speciate()
-        # for i, s in enumerate(population.species):
-            # print(f'{i} species has {s.get_len()} members')
+        population.speciate()
+        for i, s in enumerate(population.species):
+            print(f'{i} species has {s.get_len()} members')
         show = False
 
     if show:
-        print(brain.get_outputs([0.1, 0.2, 0.3, 0.4]))
+        print(brain.get_outputs(sample_inputs))
         print(brain)
 
 def mainloop():

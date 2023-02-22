@@ -18,7 +18,7 @@ class Population:
         for _ in range(pop_len):
             self.population.append(Genome(self.gh))
             # temp 
-            for _ in range(random.randint(0, 200)):
+            for _ in range(random.randint(0, 50)):
                 self.population[-1].mutate()
 
         self.best_index = 0

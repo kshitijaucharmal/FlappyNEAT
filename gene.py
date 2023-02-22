@@ -5,13 +5,18 @@ class Gene:
     def __init__(self, i, o):
         self.in_node = i
         self.out_node = o
+        # gene weight
         self.weight = random.random() * 4 - 2
+        # innovation ID
         self.inno = -1
+        # If enabled
         self.enabled = True
 
+        # For showing
         self.color = (0, 255, 0)
         pass
 
+    # Clone the gene
     def clone(self):
         g = Gene(self.in_node.clone(), self.out_node.clone())
         g.weight = self.weight
@@ -19,6 +24,7 @@ class Gene:
         g.inno = self.inno
         return g
     
+    # Simple mutations to weight
     def mutate(self):
         if random.random() < 0.1:
             self.weight = random.random() * 4 - 2
@@ -28,6 +34,7 @@ class Gene:
             self.weight = self.weight if self.weight < 2 else 2
             self.weight = self.weight if self.weight > -2 else -2
 
+    # Get Some info
     def get_info(self):
         s = str(self.inno) + "] "
         s += str(self.in_node.number) + "(" + str(self.in_node.layer) + ") -> "
@@ -39,6 +46,7 @@ class Gene:
     def __str__(self) -> str:
         return self.get_info()
 
+    # For showing
     def show(self, ds):
         if self.weight > 0:
             self.color = (255, 0, 0)
