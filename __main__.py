@@ -8,7 +8,7 @@ from floor import Floor
 from ball import Ball
 from obstacle import Obstacle
 
-WIDTH = 500
+WIDTH = 400
 HEIGHT = 700
 FPS = 60
 
@@ -21,11 +21,16 @@ ball = Ball(WIDTH/2,HEIGHT/2, screen)
 ballColor = ball.ballcolor()
 floor = Floor(0, 650, 500, 100, screen)
 clock = pygame.time.Clock() #for speed
-obstacle1 = Obstacle(WIDTH/2, HEIGHT/2, screen)
+obstacle1 = Obstacle(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT, screen)
 shape = obstacle1.obs_shape()
+
+angle = 0
+peach = (255, 175, 128)
+green = (0, 104, 55)
 
 # Mainloop
 def main(screen):
+    global angle
     run = True
     while run:
         screen.fill((0,0,0))
@@ -44,8 +49,13 @@ def main(screen):
         # Drawing
         ball.draw()
         floor.draw()
-        obstacle1.draw([WIDTH/2 - 20, HEIGHT/2 - 10, 40, 20])
-        
+        parts = obstacle1.draw(screen, False)
+
+        # for i in range(len(parts)):
+            # rotated_part = pygame.transform.rotate(parts[i], angle)
+
+        angle+=1
+
         pygame.display.update()
         clock.tick(60)
 

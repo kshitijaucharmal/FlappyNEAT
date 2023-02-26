@@ -7,11 +7,11 @@ class Ball(pygame.sprite.Sprite):
         self.x= x
         self.y = y
         self.pos = (self.x, self.y)
-        self.r = 10
+        self.r = 8
         self.y_vel = 0
         self.fall_count=0
         self.jump_count=0
-        self.jump_force = 10
+        self.jump_force = 6
 
         # color palette
         self.palette = ['red', 'blue', 'green', 'yellow']
@@ -43,7 +43,7 @@ class Ball(pygame.sprite.Sprite):
     #     print (self.jump_count,self.y_vel,self.fall_count)
     #     
     def loop(self, dt): 
-        self.y_vel += min(1, (self.fall_count * dt) * self.jump_force)
+        self.y_vel += min(0.7, (self.fall_count * dt) * self.jump_force)
         self.move(self.y_vel)
         self.fall_count +=1
                 
