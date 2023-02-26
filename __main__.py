@@ -21,8 +21,7 @@ ball = Ball(WIDTH/2,HEIGHT/2, screen)
 ballColor = ball.ballcolor()
 floor = Floor(0, 650, 500, 100, screen)
 clock = pygame.time.Clock() #for speed
-obstacle1 = Obstacle(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT, screen)
-shape = obstacle1.obs_shape()
+obstacle1 = Obstacle(WIDTH/2, 200, 50, 50, screen)
 
 angle = 0
 peach = (255, 175, 128)
@@ -47,9 +46,9 @@ def main(screen):
         ball.loop(1/FPS)
 
         # Drawing
+        parts = obstacle1.draw(screen, False)
         ball.draw()
         floor.draw()
-        parts = obstacle1.draw(screen, False)
 
         # for i in range(len(parts)):
             # rotated_part = pygame.transform.rotate(parts[i], angle)
