@@ -7,6 +7,7 @@ import sys #to enable system commands
 from floor import Floor
 from ball import Ball
 from obstacle import Obstacle
+from camera import Camera
 
 WIDTH = 400
 HEIGHT = 700
@@ -15,6 +16,7 @@ FPS = 60
 pygame.display.init()
 pygame.display.set_caption('Colour Switch')
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+camera = Camera('simple', 300, 300)
 
 # Setup
 ball = Ball(WIDTH/2,HEIGHT/2, screen)
@@ -32,7 +34,8 @@ def main(screen):
     global angle
     run = True
     while run:
-        screen.fill((0,0,0))
+        screen.fill((51, 51, 51))
+        camera.update(ball)
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -46,14 +49,15 @@ def main(screen):
         ball.loop(1/FPS)
 
         # Drawing
-        parts = obstacle1.draw(screen, False)
-        ball.draw()
-        floor.draw()
+        parts = obstacle1.draw()
+        ball.draw(screen)
+
+        # screen.blit(ball.image, camera.apply(ball))
+        # screen.blit(obstacle1.image, camera.apply(obstacle1))
+
 
         # for i in range(len(parts)):
             # rotated_part = pygame.transform.rotate(parts[i], angle)
-
-        angle+=1
 
         pygame.display.update()
         clock.tick(60)

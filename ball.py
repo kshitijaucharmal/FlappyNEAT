@@ -17,6 +17,10 @@ class Ball(pygame.sprite.Sprite):
         self.palette = ['red', 'blue', 'green', 'yellow']
         # Random color
         self.color = random.choice(self.palette)
+
+        self.image = pygame.Surface((self.r*2, self.r*2), pygame.SRCALPHA)
+        self.image.convert_alpha()
+        self.rect = pygame.draw.circle(self.image, self.color, (self.r, self.r), self.r)
         pass
         
     # Change ball color and return it
@@ -34,19 +38,11 @@ class Ball(pygame.sprite.Sprite):
   
     def move(self,dy):
         self.y += dy
-        
-    # def landed(self):
-    #     self.fall_count = 0
-    #     self.y_vel = 0
-    #     self.jump_count = 0
-    #     self.y = 600
-    #     print (self.jump_count,self.y_vel,self.fall_count)
-    #     
+
     def loop(self, dt): 
         self.y_vel += min(0.7, (self.fall_count * dt) * self.jump_force)
         self.move(self.y_vel)
         self.fall_count +=1
-                
-    def draw(self):
-        self.pos = (self.x,self.y)
-        pygame.draw.circle(self.surface, self.color, self.pos, self.r)
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x-self.r/2, self.y))
