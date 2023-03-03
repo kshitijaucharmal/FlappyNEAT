@@ -21,4 +21,6 @@ class Floor(pygame.sprite.Sprite):
         f_top = self.y
         sep = int(f_top - c_bottom)
         if sep < 1:
-            print('Below Ground level')
+            ball.y = self.y - 5
+            return True
+        return False

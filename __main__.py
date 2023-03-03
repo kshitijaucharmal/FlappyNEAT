@@ -34,8 +34,10 @@ def main(screen):
     global angle
     run = True
     while run:
-        screen.fill((51, 51, 51))
+        screen.fill((11, 11, 11))
         camera.update(ball)
+
+        jump_pressed = False
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -43,10 +45,13 @@ def main(screen):
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE: #and ball.jump_count < 2:
+                    jump_pressed = True
                     ball.jump()
         
-        floor.collide(ball)
-        ball.loop(1/FPS)
+        if not floor.collide(ball) or jump_pressed:
+            ball.loop(1/FPS)
+
+        obstacle1.update()
 
         # Drawing
         parts = obstacle1.draw()

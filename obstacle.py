@@ -13,15 +13,20 @@ class Obstacle(pygame.sprite.Sprite):
         self.y = y
         self.r = 250
         self.line_width = 6
+        self.show_pos = [0, 0]
+        self.pos = [0, 0]
+
         self.Shapes = ['square', 'line', 'cross']
         self.Palette = ['red', 'blue', 'green', 'yellow', 'red', 'blue', 'green', 'yellow']
 
-        self.shape = self.obs_shape()
+        self.shape = 'square'
         self.color = self.obs_color()
         
         self.draw_obstacle(screen, random.choice([True, False]))
         self.image.convert_alpha()
         self.rect = self.image.get_rect()
+
+        self.angle = 0
         pass
 
     def obs_color(self):
@@ -32,10 +37,23 @@ class Obstacle(pygame.sprite.Sprite):
         u = self.Palette[index+3]
         return r, s, t, u
 
+    def update(self):
+        if self.shape in ['square', 'cross']:
+            # Rotate along center
+            self.image = pygame.transform.rotate(self.image, self.angle)
+            self.angle += 0.01
+        else:
+            # Line, move along side
+            print('sliding')
+        pass
+
     def draw(self):
-        self.screen.blit(self.image, self.pos)
+        self.screen.blit(self.image, self.show_pos)
+        self.pos = list(self.image.get_rect().center)
+        self.pos[0] += self.show_pos[0]
+        self.pos[1] += self.show_pos[1]
         # Debuggin circle
-        # pygame.draw.circle(self.image, (0, 0, 0), self.image.get_rect().center, 10)
+        # pygame.draw.circle(self.screen, (0, 0, 0), self.pos, 8)
 
     def draw_obstacle(self, screen, case):
         w = self.w
@@ -48,7 +66,7 @@ class Obstacle(pygame.sprite.Sprite):
             parts.append(pygame.draw.line(self.image, self.color[1], (x+w, y-h), (x+w, y+h), self.line_width))
             parts.append(pygame.draw.line(self.image, self.color[2], (x+w, y+h), (x-w, y+h), self.line_width))
             parts.append(pygame.draw.line(self.image, self.color[3], (x-w, y+h), (x-w, y-h), self.line_width))
-            self.pos = (self.x - w, self.y)
+            self.show_pos = (self.x - w, self.y)
 
         elif self.shape == 'line':
             self.image = pygame.Surface((self.screen_width, self.line_width))
@@ -59,12 +77,11 @@ class Obstacle(pygame.sprite.Sprite):
             parts.append(pygame.draw.line(self.image, self.color[2], (200+x, 0), (300+x, 0), self.line_width))
             parts.append(pygame.draw.line(self.image, self.color[3], (300+x, 0), (400+x, 0), self.line_width))
             # Gonna need an extra part here for looping sideways
-            self.pos = (0, y-h/2)
+            self.show_pos = (0, y-h/2)
 
         # Cross
         else:
             self.image = pygame.Surface((10, 10))
-            print('later')
             # if case:
             #     parts.append(pygame.draw.line(screen, self.color[0], (150, 125), (150, 200), self.line_width))
             #     parts.append(pygame.draw.line(screen, self.color[1], (225, 200), (150, 200), self.line_width))
