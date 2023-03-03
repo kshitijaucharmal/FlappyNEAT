@@ -23,11 +23,17 @@ class Population:
 
         self.best_index = 0
         self.best = self.population[self.best_index]
-        self.max_species = 10
+        self.max_species = 5
         self.species = []
         pass
+
+    def fitness_sharing(self):
+        for i in range(self.pop_len):
+            # For now, fitness_sharing dosen't work
+            self.population[i].adjusted_fitness = self.population[i].fitness
+            pass
+        pass
     
-    # Shit try
     def speciate(self):
         # Clear all species
         self.species.clear()
@@ -47,6 +53,9 @@ class Population:
                     self.species[lowest].add(self.population[i])
                 else:
                     self.species.append(Species(self.population[i]))
+        if True:
+            for s in self.species:
+                print('Species : ', s.get_len())
         pass
 
     def plot_cluster(self):
@@ -69,7 +78,7 @@ class Population:
         pass
 
     def prev(self):
-        self.best_index = self.best_index - 1 if self.best_index > 0 else self.best_index - 1
+        self.best_index = self.best_index - 1 if self.best_index > 0 else self.pop_len - 1
         self.best = self.population[self.best_index]
         print(self.best_index)
         pass

@@ -19,6 +19,7 @@ class Genome:
 
         # Random fitness for now
         self.fitness = random.uniform(-2, 2)
+        self.adjusted_fitness = 0
 
         # Input nodes
         for _ in range(self.n_inputs):

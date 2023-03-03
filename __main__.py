@@ -20,7 +20,6 @@ pygame.display.set_caption('Test')
 sample_inputs = [(random.random()) for a in range(population.n_inputs)]
 
 def setup():
-    # brains[0].calculate_compatibility(brains[1])
     pass
 
 def keydown_event(brain, event):
@@ -41,10 +40,11 @@ def keydown_event(brain, event):
         print(brain.get_outputs(sample_inputs))
 
     if event.key == K_s:
-        population.plot_cluster()
+        # Divide population in species
         population.speciate()
-        for i, s in enumerate(population.species):
-            print(f'{i} species has {s.get_len()} members')
+        # Evaluate each species
+        for s in range(len(population.species)):
+            population.species[s].evaluate()
         show = False
 
     if show:
