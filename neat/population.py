@@ -74,11 +74,9 @@ class Population:
     def next(self):
         self.best_index = self.best_index + 1 if self.best_index <= self.pop_len - 2 else 0
         self.best = self.population[self.best_index]
-        print(self.best_index)
         pass
 
     def prev(self):
         self.best_index = self.best_index - 1 if self.best_index > 0 else self.pop_len - 1
         self.best = self.population[self.best_index]
-        print(self.best_index)
         pass

@@ -11,7 +11,6 @@ class Species:
 
     def add(self, brain):
         self.members.append(brain)
-        # TODO: Check fitness and set as rep
         if self.rep.fitness < brain.fitness:
             self.rep = self.members[-1]
 
@@ -23,5 +22,6 @@ class Species:
         return len(self.members)
 
     def evaluate(self):
-        print('Evaluating Species')
+        self.members.sort(key=lambda x:x.adjusted_fitness, reverse=True)
+        print(len(self.members), self.members[0].adjusted_fitness)
         pass

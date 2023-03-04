@@ -2,10 +2,14 @@
 import pygame
 import random
 
-# Files
+# NEAT Files
 from neat.genome import Genome
 from neat.geneh import GeneHistory
 from neat.population import Population
+
+# Game Files
+from bird import Bird
+from pipe import PipePair
 
 WIDTH = 400
 HEIGHT = 400
@@ -45,6 +49,7 @@ def keydown_event(brain, event):
         # Divide population in species
         population.speciate()
         # Evaluate each species
+        population.fitness_sharing()
         for s in range(len(population.species)):
             population.species[s].evaluate()
         show = False
