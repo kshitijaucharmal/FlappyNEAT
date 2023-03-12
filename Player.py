@@ -21,5 +21,3 @@ class Player(pygame.sprite.Sprite):
         
     def draw(self):
         screen.blit(self.image, self.rect)  
-        
-         

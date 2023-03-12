@@ -1,6 +1,8 @@
 from neat.genome import Genome
 from neat.geneh import GeneHistory
 
+import random
+
 class Species:
     def __init__(self, mem):
         self.members = []
@@ -22,6 +24,16 @@ class Species:
         return len(self.members)
 
     def evaluate(self):
+        self.fitness_sharing()
         self.members.sort(key=lambda x:x.adjusted_fitness, reverse=True)
-        print(len(self.members), self.members[0].adjusted_fitness)
+        self.rep = self.members[0]
+        print(len(self.members), self.members[0].fitness, self.members[0].adjusted_fitness)
+
+        # replace each member with child of rep and a random one from the fitter half
+        for i in range(len(self.members)):
+            self.members[i] = self.rep.crossover(self.members[random.randint(0, len(self.members)//2)])
         pass
+
+    def fitness_sharing(self):
+        for i in range(len(self.members)):
+            self.members[i].adjusted_fitness = self.members[i].fitness / len(self.members)

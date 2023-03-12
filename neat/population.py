@@ -27,12 +27,12 @@ class Population:
         self.species = []
         pass
 
-    def fitness_sharing(self):
+    def get_compat_no(self, brain):
+        no = 0
         for i in range(self.pop_len):
-            # For now, fitness_sharing dosen't work
-            self.population[i].adjusted_fitness = self.population[i].fitness
-            pass
-        pass
+            if brain.calculate_compatibility(self.population[i]) < 3:
+                no += 1
+        return no
     
     def speciate(self):
         # Clear all species

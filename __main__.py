@@ -13,8 +13,8 @@ from pipe import PipePair
 
 WIDTH = 400
 HEIGHT = 400
-NNWIDTH = WIDTH/2
-NNHEIGHT = HEIGHT/2
+NNWIDTH = WIDTH/3
+NNHEIGHT = HEIGHT/3
 FPS = 60
 BGCOLOR = (11, 11, 11)
 
@@ -30,7 +30,6 @@ sample_inputs = [(random.random()) for a in range(population.n_inputs)]
 
 def keydown_event(brain, event):
     # Set ctr to show best members of population
-    show = False
     if event.key == pygame.K_n:
         population.next()
     if event.key == pygame.K_b:
@@ -45,19 +44,23 @@ def keydown_event(brain, event):
     if event.key == pygame.K_o:
         print(brain.get_outputs(sample_inputs))
 
+    if event.key == pygame.K_t:
+        global g
+        g = g.clone()
+
     if event.key == pygame.K_s:
         # Divide population in species
         population.speciate()
         # Evaluate each species
-        population.fitness_sharing()
         for s in range(len(population.species)):
             population.species[s].evaluate()
         show = False
 
-    if show:
+    if event.key == pygame.K_p:
         print(brain.get_outputs(sample_inputs))
         print(brain)
 
+g = population.best
 def mainloop():
     run = True
     while run:
@@ -66,7 +69,7 @@ def mainloop():
         nn.fill(BGCOLOR)
 
         # Show the best one
-        population.best.show(nn)
+        g.show(nn)
 
         # Event Handling
         for event in pygame.event.get():
@@ -76,7 +79,7 @@ def mainloop():
                 keydown_event(population.best, event)
 
         # Draw neural network
-        main_screen.blit(nn, (WIDTH-NNWIDTH, 0))
+        main_screen.blit(nn, (WIDTH/2, HEIGHT/2))
 
         # Updating
         pygame.display.update()

@@ -3,6 +3,7 @@ from neat.gene import Gene
 
 import random
 import pygame
+from numpy import argmax
 
 class Genome:
     def __init__(self, gh):
@@ -13,15 +14,21 @@ class Genome:
         self.n_outputs = gh.n_outputs
         # Total Nodes (used as ctr)
         self.total_nodes = 0
+        self.highest_inno = 0
         
         # Nodes and genes
         self.nodes = []
         self.genes = []
 
         # Random fitness for now
-        self.fitness = random.uniform(-2, 2)
+        self.fitness = random.uniform(-20, 20)
         self.adjusted_fitness = 0
 
+        self.init_nodes()
+
+        pass
+
+    def init_nodes(self):
         # Input nodes
         for _ in range(self.n_inputs):
             self.nodes.append(Node(self.total_nodes, 0))
@@ -31,8 +38,43 @@ class Genome:
         for _ in range(self.n_outputs):
             self.nodes.append(Node(self.total_nodes, 1))
             self.total_nodes += 1
-
         pass
+
+    def get_node(self, number):
+        for i in range(len(self.nodes)):
+            if self.nodes[i].number == number:
+                return self.nodes[i]
+        return None
+
+    # Connect genes to get ready for output calculation
+    def connect_genes(self):
+        for i in range(len(self.genes)):
+            self.genes[i].in_node = self.get_node(self.genes[i].in_node.number)
+            self.genes[i].out_node = self.get_node(self.genes[i].out_node.number)
+
+        for i in range(len(self.nodes)):
+            self.nodes[i].in_genes.clear()
+
+        # Add in_genes
+        for i in range(len(self.genes)):
+            self.genes[i].out_node.in_genes.append(self.genes[i])
+        pass
+
+    def clone(self):
+        child = Genome(self.gh)
+        child.fitness = self.fitness
+        child.adjusted_fitness = self.adjusted_fitness
+        child.total_nodes = self.total_nodes
+        child.highest_inno = self.highest_inno
+        child.genes.clear()
+        child.nodes.clear()
+        
+        for n in self.nodes:
+            child.nodes.append(n.clone())
+        for g in self.genes:
+            child.genes.append(g.clone())
+        # child.connect_genes()
+        return child
 
     # Gene with inno exists
     def exists(self, inno):
@@ -56,11 +98,15 @@ class Genome:
             x.inno = c.inno
             if not self.exists(x.inno):
                 self.genes.append(x)
+                if x.inno > self.highest_inno:
+                    self.highest_inno = x.inno
         else:
             x.inno = self.gh.global_inno
             self.gh.global_inno += 1
             self.gh.all_genes.append(x.clone())
             self.genes.append(x)
+            if x.inno > self.highest_inno:
+                self.highest_inno = x.inno
         pass
 
     # Mutate add gene
@@ -89,28 +135,18 @@ class Genome:
             self.add_node()
         pass
 
-    # Connect genes to get ready for output calculation
-    def connect_genes(self):
-        for i in range(len(self.nodes)):
-            self.nodes[i].in_genes.clear()
-
-        # Add in_genes
-        for i in range(len(self.genes)):
-            self.genes[i].out_node.in_genes.append(self.genes[i])
-        pass
-
     # Get Outputs
     def get_outputs(self, inputs):
         if len(inputs) != self.n_inputs:
             print('Wrong number of inputs')
             return [-1]
 
+        # Connect genes (Clean references)
+        self.connect_genes()
+
         # Input layers outputs are the specified inputs
         for i in range(self.n_inputs):
             self.nodes[i].output = inputs[i]
-
-        # Connect genes (Clean references)
-        self.connect_genes()
 
         # calculate layer wise
         for l in range(2, self.gh.highest_hidden + 1):
@@ -138,20 +174,16 @@ class Genome:
                 return g.weight
         return -1
 
+    def get_gene(self, inno):
+        for i in range(len(self.genes)):
+            if self.genes[i].inno == inno:
+                return self.genes[i]
+        return False
+
     # Compatibility calculation
     def calculate_compatibility(self, partner):
-        try:
-            p1_highest_inno = max([(a.inno) for a in self.genes])
-        except:
-            p1_highest_inno = 0
-
-        try:
-            p2_highest_inno = max([(a.inno) for a in partner.genes])
-        except:
-            p2_highest_inno = 0
-
         # Set highest inno (Should be one with highest fitness)
-        highest_inno = max(p1_highest_inno, p2_highest_inno)
+        highest_inno = max(self.highest_inno, partner.highest_inno)
 
         matching = 0
         disjoint = 0
