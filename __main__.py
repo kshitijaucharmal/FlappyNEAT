@@ -7,14 +7,10 @@ from neat.genome import Genome
 from neat.geneh import GeneHistory
 from neat.population import Population
 
-# Game Files
-from bird import Bird
-from pipe import PipePair
-
 WIDTH = 400
 HEIGHT = 400
-NNWIDTH = WIDTH/3
-NNHEIGHT = HEIGHT/3
+NNWIDTH = WIDTH
+NNHEIGHT = HEIGHT
 FPS = 60
 BGCOLOR = (11, 11, 11)
 
@@ -79,7 +75,7 @@ def mainloop():
                 keydown_event(population.best, event)
 
         # Draw neural network
-        main_screen.blit(nn, (WIDTH/2, HEIGHT/2))
+        main_screen.blit(nn, (0, 0))
 
         # Updating
         pygame.display.update()
