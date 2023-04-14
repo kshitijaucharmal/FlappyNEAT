@@ -1,9 +1,6 @@
 import pygame
 from sys import exit
 import random
-bird_images = [pygame.image.load("assets/bird_down.png"),
-               pygame.image.load("assets/bird_mid.png"),
-               pygame.image.load("assets/bird_up.png")]
 
 bird_start_position = (100, 250)
 scroll_speed = 1
@@ -12,8 +9,9 @@ win_height = 720
 win_width = 551
 
 class Bird(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, bird_images):
         pygame.sprite.Sprite.__init__(self)
+        self.bird_images = bird_images
         self.image = bird_images[0]
         self.rect = self.image.get_rect()
         self.rect.center = bird_start_position
@@ -30,7 +28,7 @@ class Bird(pygame.sprite.Sprite):
             self.image_index += 1 
         if self.image_index >= 30:
             self.image_index = 0
-        self.image = bird_images[self.image_index // 10] 
+        self.image = self.bird_images[self.image_index // 10] 
         #used to change the image of the bird for every 10 index
         #i.e. for image index between 0-9 : value = 0 - 1st image
         # 10-19 : value = 1 - 2nd image

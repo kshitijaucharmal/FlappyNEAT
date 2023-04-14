@@ -28,7 +28,7 @@ start_image = pygame.image.load("assets/start.png")
 scroll_speed = 1
 bird_start_position = (100, 250)
 
-font = pygame.font.SysFont('Segoe', 26)
+font = pygame.font.SysFont('Roboto', 26)
 game_stopped = True
 
 def quit_game():
@@ -41,7 +41,7 @@ def quit_game():
 # Instantiate Bird
 bird = pygame.sprite.Group()
 for _ in range(100):
-    bird.add(Bird()) # adding the instance of class bird to the group
+    bird.add(Bird(bird_images)) # adding the instance of class bird to the group
 
 def all_dead():
     global bird
@@ -62,17 +62,14 @@ def main():
     # Instantiate Initial Ground
     x_pos_ground, y_pos_ground = 0, 520
     ground = pygame.sprite.Group() #creating a sprite group
-    ground.add(Ground(x_pos_ground, y_pos_ground)) #adding ground object to the abv grp
+    ground.add(Ground(x_pos_ground, y_pos_ground, ground_image)) #adding ground object to the abv grp
 
     run = True
     while run:
-        # Quit
+        # Quit Event Check
         quit_game()
 
-        # Reset Frame
-        window.fill((0, 0, 0))
-
-        # User Input
+        # Get User Input
         user_input = pygame.key.get_pressed()
 
         # Draw Background
@@ -80,7 +77,7 @@ def main():
 
         # Spawn Ground
         if len(ground) <= 2:
-            ground.add(Ground(win_width, y_pos_ground))
+            ground.add(Ground(win_width, y_pos_ground, ground_image))
 
         # Draw - Pipes, Ground and Bird
         pipes.draw(window)
@@ -112,7 +109,6 @@ def main():
                     window.blit(game_over_image, (win_width // 2 - game_over_image.get_width() // 2,
                                                   win_height // 2 - game_over_image.get_height() // 2))
                     if user_input[pygame.K_r]:
-                        score = 0
                         break
 
         # Spawn Pipes
@@ -120,8 +116,8 @@ def main():
             x_top, x_bottom = 550, 550 #pt from where pipes enter
             y_top = random.randint(-600, -480)
             y_bottom = y_top + random.randint(90, 130) + bottom_pipe_image.get_height()
-            pipes.add(Pipe(x_top, y_top, top_pipe_image, 'top'))
-            pipes.add(Pipe(x_bottom, y_bottom, bottom_pipe_image, 'bottom'))
+            pipes.add(Pipe(x_top, y_top, top_pipe_image, 'top', top_pipe_image, bottom_pipe_image))
+            pipes.add(Pipe(x_bottom, y_bottom, bottom_pipe_image, 'bottom', top_pipe_image, bottom_pipe_image))
             pipe_timer = random.randint(80, 120)
         pipe_timer -= 1
 
@@ -138,7 +134,7 @@ def menu():
         # Draw Menu
         window.fill((0, 0, 0))
         window.blit(skyline_image, (0, 0))
-        window.blit(ground_image, Ground(0, 520))
+        window.blit(ground_image, Ground(0, 520, ground_image))
         window.blit(bird_images[0], (100, 250))
         window.blit(start_image, (win_width // 2 - start_image.get_width() // 2,
                                   win_height // 2 - start_image.get_height() // 2))

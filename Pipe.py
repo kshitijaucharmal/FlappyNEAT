@@ -2,9 +2,6 @@ import pygame
 from sys import exit
 import random
 
-top_pipe_image = pygame.image.load("assets/pipe_top.png")
-bottom_pipe_image = pygame.image.load("assets/pipe_bottom.png")
-
 win_height = 720
 win_width = 551
 
@@ -14,7 +11,7 @@ score = 0
 
 
 class Pipe(pygame.sprite.Sprite):
-    def __init__(self, x, y, image, pipe_type):
+    def __init__(self, x, y, image, pipe_type, top_pipe_image, bottom_pipe_image):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
         self.rect = self.image.get_rect()
