@@ -5,7 +5,6 @@ from Bird import Bird
 from Pipe import Pipe
 from Ground import Ground
 
-
 pygame.init()
 clock = pygame.time.Clock()
 
@@ -143,6 +142,5 @@ def menu():
 
         pygame.display.update()
 
-        
-if __name__=="__main__":
+if __name__ == "__main__":
     menu()
