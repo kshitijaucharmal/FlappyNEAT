@@ -31,7 +31,6 @@ bird_start_position = (100, 250)
 font = pygame.font.SysFont('Segoe', 26)
 game_stopped = True
 
-
 def quit_game():
     # Exit Game
     for event in pygame.event.get():
@@ -39,15 +38,22 @@ def quit_game():
             pygame.quit()
             exit() 
 
+# Instantiate Bird
+bird = pygame.sprite.Group()
+for _ in range(100):
+    bird.add(Bird()) # adding the instance of class bird to the group
+
+def all_dead():
+    global bird
+    for s in bird.sprites():
+        if s.alive:
+            return False
+    return True
 
 # Game Main Method
 def main():
     global score  
     score = 0
-
-    # Instantiate Bird
-    bird = pygame.sprite.GroupSingle() #group that holds a single sprite
-    bird.add(Bird()) # adding the instance of class bird to the group
 
     # Setup Pipes
     pipe_timer = 0 # sets interval within which pipes will be spawn onto the screen
@@ -81,11 +87,11 @@ def main():
         ground.draw(window)
         bird.draw(window)
 
-       
-
         # Update - Pipes, Ground and Bird
-        if bird.sprite.alive:
-            pipes.update()
+        if not all_dead(): # bird.sprite.alive:
+            s = pipes.update()
+            if s:
+                score += 1
             ground.update()
         bird.update(user_input)
         
@@ -95,30 +101,32 @@ def main():
         window.blit(score_text, (20, 20)) 
 
         # Collision Detection
-        collision_pipes = pygame.sprite.spritecollide(bird.sprites()[0], pipes, False)
-        collision_ground = pygame.sprite.spritecollide(bird.sprites()[0], ground, False)
-        if collision_pipes or collision_ground:
-            bird.sprite.alive = False
-            if collision_ground:
-                window.blit(game_over_image, (win_width // 2 - game_over_image.get_width() // 2,
-                                              win_height // 2 - game_over_image.get_height() // 2))
-                if user_input[pygame.K_r]:
-                    score = 0
-                    break
+        for b in range(len(bird.sprites())):
+            collision_pipes = pygame.sprite.spritecollide(bird.sprites()[b], pipes, False)
+            collision_ground = pygame.sprite.spritecollide(bird.sprites()[b], ground, False)
+            if collision_pipes or collision_ground:
+                bird.sprites()[b].alive = False
+                if not all_dead():
+                    continue
+                if collision_ground:
+                    window.blit(game_over_image, (win_width // 2 - game_over_image.get_width() // 2,
+                                                  win_height // 2 - game_over_image.get_height() // 2))
+                    if user_input[pygame.K_r]:
+                        score = 0
+                        break
 
         # Spawn Pipes
-        if pipe_timer <= 0 and bird.sprite.alive:
+        if pipe_timer <= 0 and not all_dead():
             x_top, x_bottom = 550, 550 #pt from where pipes enter
             y_top = random.randint(-600, -480)
             y_bottom = y_top + random.randint(90, 130) + bottom_pipe_image.get_height()
             pipes.add(Pipe(x_top, y_top, top_pipe_image, 'top'))
             pipes.add(Pipe(x_bottom, y_bottom, bottom_pipe_image, 'bottom'))
-            pipe_timer = random.randint(180, 250)
+            pipe_timer = random.randint(80, 120)
         pipe_timer -= 1
 
         clock.tick(60)
         pygame.display.update()
-
 
 # Menu
 def menu():

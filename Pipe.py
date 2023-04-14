@@ -8,7 +8,7 @@ bottom_pipe_image = pygame.image.load("assets/pipe_bottom.png")
 win_height = 720
 win_width = 551
 
-scroll_speed = 1
+scroll_speed = 3
 bird_start_position = (100, 250)
 score = 0
 
@@ -40,6 +40,4 @@ class Pipe(pygame.sprite.Sprite):
                 self.passed = True
                 global score
                 score += 1
-                print (score)
-                
-                
+                return True

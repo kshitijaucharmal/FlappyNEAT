@@ -1,8 +1,9 @@
 import pygame
 from sys import exit
 import random
+
 ground_image = pygame.image.load("assets/ground.png")
-scroll_speed = 1
+scroll_speed = 3
 win_height = 720
 win_width = 551
 

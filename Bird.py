@@ -11,8 +11,6 @@ scroll_speed = 1
 win_height = 720
 win_width = 551
 
-
-
 class Bird(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -53,10 +51,15 @@ class Bird(pygame.sprite.Sprite):
             self.flap = False
 
         # Rotate Bird
-        self.image = pygame.transform.rotate(self.image, self.vel * -7)
+        self.image = pygame.transform.rotate(self.image, self.vel * -8)
 
         # User Input
         # to execute jump whenever the user presses space bar
-        if user_input[pygame.K_SPACE] and not self.flap and self.rect.y > 0 and self.alive:
+        _input = user_input[pygame.K_SPACE]
+        if random.random() < 0.05:
+            _input = True
+        else:
+            _input = False
+        if _input and not self.flap and self.rect.y > 0 and self.alive:
             self.flap = True
             self.vel = -7
