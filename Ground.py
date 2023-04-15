@@ -2,9 +2,9 @@ import pygame
 from sys import exit
 import random
 
+from globals import win_height, win_width
+
 scroll_speed = 3
-win_height = 720
-win_width = 551
 
 class Ground(pygame.sprite.Sprite):
     def __init__(self, x, y, ground_image):

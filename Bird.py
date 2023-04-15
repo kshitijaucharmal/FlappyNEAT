@@ -2,11 +2,7 @@ import pygame
 from sys import exit
 import random
 
-bird_start_position = (100, 250)
-scroll_speed = 1
-
-win_height = 720
-win_width = 551
+from globals import win_width, win_height, bird_start_position
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, bird_images):
@@ -15,7 +11,7 @@ class Bird(pygame.sprite.Sprite):
         self.image = bird_images[0]
         self.rect = self.image.get_rect()
         self.rect.center = bird_start_position
-        self.image_index = 0 #loops throught the bird images list and animates the bird
+        self.image_index = 0 #loops throughout the bird images list and animates the bird
         self.vel = 0 #gravity
         self.flap = False #
         self.alive = True
@@ -58,6 +54,9 @@ class Bird(pygame.sprite.Sprite):
             _input = True
         else:
             _input = False
+
+        # flap
         if _input and not self.flap and self.rect.y > 0 and self.alive:
             self.flap = True
             self.vel = -7
+        pass
