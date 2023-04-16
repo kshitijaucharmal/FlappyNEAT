@@ -5,7 +5,7 @@ import random
 from globals import win_width, win_height, bird_start_position, scroll_speed
 
 class Pipe(pygame.sprite.Sprite):
-    def __init__(self, x, y, image, pipe_type, top_pipe_image, bottom_pipe_image):
+    def __init__(self, x, y, image, pipe_type):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
         self.rect = self.image.get_rect()
@@ -22,12 +22,25 @@ class Pipe(pygame.sprite.Sprite):
             self.kill()
 
         # Score
-        if self.pipe_type == 'bottom': # checking wrt bottom pipes
-            if bird_start_position[0] > self.rect.topleft[0] and not self.passed:
-                self.enter = True
-            if bird_start_position[0] > self.rect.topright[0] and not self.passed:
-                self.exit = True
-            if self.enter and self.exit and not self.passed:
-                self.passed = True
+        # if self.pipe_type == 'bottom': # checking wrt bottom pipes
+            # if bird_start_position[0] > self.rect.topleft[0] and not self.passed:
+                # self.enter = True
+            # if bird_start_position[0] > self.rect.topright[0] and not self.passed:
+                # self.exit = True
+            # if self.enter and self.exit and not self.passed:
+                # self.passed = True
                 # score += 1
+        pass
+
+class PipePair:
+    def __init__(self, top, bottom):
+        self.top = top
+        self.bottom = bottom
+        self.xPos = self.top.rect.topleft[0]
+        pass
+
+    def update(self):
+        self.top.update()
+        self.bottom.update()
+        self.xPos = self.top.rect.topleft[0]
         pass

@@ -4,6 +4,8 @@ import pygame
 win_width = 551
 win_height = 720
 
+pop_size = 100
+
 # Images
 bird_images = [pygame.image.load("assets/bird_down.png"),
                pygame.image.load("assets/bird_mid.png"),
@@ -19,6 +21,8 @@ bird_start_position = (100, 250)
 scroll_speed = 3
 score = 0
 
-
 GAME_STOPPED = True
 game_over = False
+
+n_inputs = 5
+n_outputs = 2

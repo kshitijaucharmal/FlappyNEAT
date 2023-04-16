@@ -16,12 +16,14 @@ class Bird(pygame.sprite.Sprite):
         self.flap = False #
         self.alive = True
 
-    def update(self, user_input):
-        #user_input is taken as an argument to check if the space bar is pressed while jump/flap
-        
+        self.fitness = 0
+        pass
+
+    def update(self):
         # Animate Bird
         if self.alive:
             self.image_index += 1 
+            self.fitness += 1
         if self.image_index >= 30:
             self.image_index = 0
         self.image = self.bird_images[self.image_index // 10] 
@@ -47,9 +49,9 @@ class Bird(pygame.sprite.Sprite):
         # Rotate Bird
         self.image = pygame.transform.rotate(self.image, self.vel * -8)
 
-        # User Input
-        # to execute jump whenever the user presses space bar
-        _input = user_input[pygame.K_SPACE]
+        # Think
+
+        # _input = user_input[pygame.K_SPACE]
         if random.random() < 0.05:
             _input = True
         else:
@@ -59,4 +61,10 @@ class Bird(pygame.sprite.Sprite):
         if _input and not self.flap and self.rect.y > 0 and self.alive:
             self.flap = True
             self.vel = -7
+        pass
+
+    def get_inputs(self):
+        pass
+
+    def think(self):
         pass

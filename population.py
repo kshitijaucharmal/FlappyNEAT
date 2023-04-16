@@ -9,12 +9,14 @@ class Population:
         self.population = pygame.sprite.Group()
         for _ in range(self.pop_size):
             self.population.add(Bird(bird_images))
+
+        self.best_fitness = 0
         pass
 
-    def update(self, user_input):
+    def update(self):
         # Update Bird population
         for bird in self.population:
-            bird.update(user_input)
+            bird.update()
         pass
 
     def draw(self, window):
@@ -35,4 +37,7 @@ class Population:
             collision_ground = pygame.sprite.spritecollide(bird_sprites[b], ground, False)
             if collision_pipes or collision_ground:
                 bird_sprites[b].alive = False
+                global fitness
+                if bird_sprites[b].fitness > self.best_fitness:
+                    self.best_fitness = bird_sprites[b].fitness
         pass

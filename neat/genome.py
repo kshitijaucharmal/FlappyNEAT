@@ -239,6 +239,7 @@ class Genome:
 
     # For showing
     def show(self, ds):
+        ds.fill((255, 255, 255, 0))
         # Set Positions
         w, h = ds.get_size()
         vert_gap = h / (self.n_inputs+1)
