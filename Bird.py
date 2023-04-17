@@ -2,10 +2,12 @@ import pygame
 from sys import exit
 import random
 
-from globals import win_width, win_height, bird_start_position
+from neat.genome import Genome
+
+from globals import win_width, win_height, bird_start_position, y_pos_ground
 
 class Bird(pygame.sprite.Sprite):
-    def __init__(self, bird_images):
+    def __init__(self, bird_images, gh):
         pygame.sprite.Sprite.__init__(self)
         self.bird_images = bird_images
         self.image = bird_images[0]
@@ -13,13 +15,29 @@ class Bird(pygame.sprite.Sprite):
         self.rect.center = bird_start_position
         self.image_index = 0 #loops throughout the bird images list and animates the bird
         self.vel = 0 #gravity
-        self.flap = False #
+        self.flap = False # Jump / Flap
         self.alive = True
+        self.on_ground = False # Collided with ground
 
-        self.fitness = 0
+        self.fitness = 0 # Fitness function
+        self.gh = gh # The genome history
+        self.brain = Genome(gh) # The genome that acts as a brain
+
+        # Random mutations for brain
+        for _ in range(10):
+            self.brain.mutate()
         pass
 
-    def update(self):
+    # Draw to screen
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
+    # Update each frame
+    def update(self, pipes):
+        # don't update if on ground
+        if self.on_ground:
+            return
+
         # Animate Bird
         if self.alive:
             self.image_index += 1 
@@ -41,6 +59,8 @@ class Bird(pygame.sprite.Sprite):
             #to prevent collision with ground
             #to increment the value y only if it is not touching the ground
             self.rect.y += int(self.vel)
+        else:
+            self.on_ground = True
         if self.vel == 0:
             # at vel = 0 bird is at its highest pt of jump
             # setting flap = False ensures that user cannot press space bar/execute jump until the bird reaches its peak position
@@ -50,12 +70,9 @@ class Bird(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, self.vel * -8)
 
         # Think
-
-        # _input = user_input[pygame.K_SPACE]
-        if random.random() < 0.05:
-            _input = True
-        else:
-            _input = False
+        closest = self.get_closest_pipe(pipes) # Get Closest pipe
+        inputs = self.get_inputs(closest) # Get input w.r.t. closest pipe
+        _input = self.think(inputs) # Should flap or not
 
         # flap
         if _input and not self.flap and self.rect.y > 0 and self.alive:
@@ -63,8 +80,29 @@ class Bird(pygame.sprite.Sprite):
             self.vel = -7
         pass
 
-    def get_inputs(self):
-        pass
+    # if in a range, its the closest
+    def get_closest_pipe(self, pipes):
+        for p in pipes:
+            if p.xPos < win_width / 2 and p.xPos > 80:
+                return p
+        return pipes[0]
 
-    def think(self):
-        pass
+    # Inputs
+    def get_inputs(self, closest):
+        inputs = []
+        inputs.append((closest.topPos - self.rect.y) / win_height) # Dist from bird to top Pipe
+        inputs.append((self.rect.y - closest.bottomPos) / win_height) # Dist from bird to bottom Pipe
+        inputs.append((closest.xPos - self.rect.x) / win_width) # Dist from pipe
+        inputs.append((y_pos_ground - self.rect.y) / win_height) # bird height
+        return inputs
+
+    def think(self, inputs):
+        should_flap = False
+
+        # Get outputs from brain
+        outs = self.brain.get_outputs(inputs)
+        # use outputs to flap or not
+        if outs[1] > outs[0]:
+            should_flap = True
+
+        return should_flap

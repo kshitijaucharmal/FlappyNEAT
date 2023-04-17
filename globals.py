@@ -18,11 +18,12 @@ game_over_image = pygame.image.load("assets/game_over.png")
 start_image = pygame.image.load("assets/start.png")
 
 bird_start_position = (100, 250)
+x_pos_ground, y_pos_ground = 0, 520
 scroll_speed = 3
 score = 0
 
 GAME_STOPPED = True
 game_over = False
 
-n_inputs = 5
+n_inputs = 4
 n_outputs = 2

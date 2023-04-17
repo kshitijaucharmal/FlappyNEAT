@@ -1,24 +1,32 @@
 import pygame
 from sys import exit
 import random
+
+# Game Files
 from Bird import Bird
 from Pipe import Pipe, PipePair
 from Ground import Ground
-
 from population import Population
 
+# NEAT Files
 from neat.genome import Genome
 from neat.geneh import GeneHistory
 
-# Importing images
+# Importing global constants
 from globals import *
 
 pygame.init()
 clock = pygame.time.Clock()
+# Set Font
 font = pygame.font.SysFont('Segoe', 26)
+
+# Current Generation
+generation = 1
 
 # Window
 window = pygame.display.set_mode((win_width, win_height))
+
+# Display for neural network
 nn = pygame.Surface((200, 200), pygame.SRCALPHA, 32)
 nn = nn.convert_alpha()
 
@@ -27,28 +35,30 @@ def quit_game():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            exit() 
+            exit()
 
 # Setup
-# Instantiate Birds
-population = Population(pop_size)
-# pipes = pygame.sprite.Group()
+gh = GeneHistory(n_inputs, n_outputs)
+# To show the best performing brain
+g = Genome(gh)
+
+# Instantiate Population of birds
+population = Population(gh, pop_size)
 pipes = []
-x_top, x_bottom = 550, 550 #pt from where pipes enter
+x_top, x_bottom = 550, 550 # pt from where pipes enter
 
 # Setup Pipes
 pipe_timer = 0 # sets interval within which pipes will be spawn onto the screen
 
 # Instantiate Initial Ground
-x_pos_ground, y_pos_ground = 0, 520
 ground = pygame.sprite.Group() #creating a sprite group
 ground.add(Ground(x_pos_ground, y_pos_ground, ground_image)) #adding ground object to the abv grp
 
-g = Genome(GeneHistory(n_inputs, n_outputs))
-
 def reset():
-    global pipes, pipe_timer, population, g
-    population = Population(pop_size)
+    global pipe_timer, g, game_over, generation
+    game_over = False
+    generation += 1
+    population.reset()
     pipes.clear()
 
     # Setup Pipes
@@ -64,10 +74,13 @@ def reset():
 def spawn_pipes():
     global pipe_timer
 
+    # Return if everyone is dead
     if population.all_dead():
         return
 
+    # While ctr > 0
     if pipe_timer > 0:
+        # Count down
         pipe_timer -= 1
         return
 
@@ -76,7 +89,9 @@ def spawn_pipes():
     top_height = random.randint(90, 130)
     y_bottom = y_top + top_height + bottom_pipe_image.get_height()
 
+    # top pos of pipe
     top = y_top + bottom_pipe_image.get_height()
+    # bottom pos of pipe
     bottom = y_bottom
 
     # Top Pipe
@@ -84,13 +99,12 @@ def spawn_pipes():
     # Bottom Pipe
     bottom_pipe = Pipe(x_bottom, y_bottom, bottom_pipe_image, 'bottom')
 
-    # pipes.add(top_pipe)
-    # pipes.add(bottom_pipe)
-
-    pipes.append(PipePair(top_pipe, bottom_pipe))
+    # Add to pipes list
+    pipes.append(PipePair(top_pipe, bottom_pipe, top, bottom))
 
     # Random time till next pipepair spawns
     pipe_timer = random.randint(80, 120)
+    pass
 
 # Game Main Method
 def main():
@@ -107,15 +121,9 @@ def main():
         # Draw Background
         window.blit(skyline_image, (0, 0))
 
-        # Game Over Management
+        # Game Over Management (Just reset)
         if game_over:
-            # Draw the game over screen
-            window.blit(game_over_image, (win_width // 2 - game_over_image.get_width() // 2,
-                                          win_height // 2 - game_over_image.get_height() // 2))
-            if user_input[pygame.K_r]:
-                reset()
-                game_over = False
-                break
+            reset()
 
         # Spawn Ground
         if len(ground) <= 2:
@@ -125,10 +133,12 @@ def main():
         spawn_pipes()
 
         # Collision detection
+        # Create pipes group
         pipes_group = pygame.sprite.Group()
         for i in range(len(pipes)):
             pipes_group.add(pipes[i].top)
             pipes_group.add(pipes[i].bottom)
+        # Check Collision
         population.collision(pipes_group, ground)
 
         # Remove unnecessary pipes
@@ -137,10 +147,8 @@ def main():
                 pipes.pop(i)
                 break
 
-        print(len(pipes))
-
         # Update - Pipes, Ground
-        if not population.all_dead(): # bird.sprite.alive:
+        if not population.all_dead(): # If not everyone is dead
             for i in range(len(pipes)):
                 pipes[i].update()
             ground.update()
@@ -148,32 +156,39 @@ def main():
             game_over = True
 
         # Update Bird population
-        population.update()
+        best_bird = population.update(pipes)
+        # Set showing genome to best birds' brain
+        if best_bird != None:
+            g = best_bird.brain
         
         # Draw - Pipes, Ground and Bird
         pipes_group.draw(window)
 
         # Draw neural Network
-        if not game_over and random.random() < 0.3:
-            g.mutate()
         g.show(nn)
 
+        # Draw ground and birds
         ground.draw(window)
         population.draw(window)
 
-        # Show Scorer 
+        # Show Score
         score_text = font.render('Score: ' + str(population.best_fitness), True, pygame.Color(255, 255, 255))
         window.blit(score_text, (20, 20)) 
+
+        # Show Generation
+        generation_text = font.render('Generation: ' + str(generation), True, pygame.Color(255, 255, 255))
+        window.blit(generation_text, (400, 20)) 
 
         # Show neural network
         window.blit(nn, (win_width-200, 0))
 
-        # Pygame Stuff
+        # Update with 60 FPS and update
         clock.tick(60)
         pygame.display.update()
 
 # Menu
 def menu():
+    # Start Screen
     while GAME_STOPPED:
         quit_game()
 
@@ -188,9 +203,11 @@ def menu():
         # User Input
         user_input = pygame.key.get_pressed()
         if user_input[pygame.K_SPACE]:
+            # Start Game when space pressed
             main()
 
         pygame.display.update()
 
+# Run only if this file is executed
 if __name__ == "__main__":
     menu()

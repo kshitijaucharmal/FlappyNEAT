@@ -4,6 +4,7 @@ import random
 
 from globals import win_height, win_width
 
+# Scroll
 scroll_speed = 3
 
 class Ground(pygame.sprite.Sprite):

@@ -1,43 +1,72 @@
 import pygame
+# Import bird images
 from globals import bird_images
 
+# Bird class
 from Bird import Bird
 
 class Population:
-    def __init__(self, pop_size=100):
-        self.pop_size = pop_size
-        self.population = pygame.sprite.Group()
+    def __init__(self, gh, pop_size=100):
+        self.pop_size = pop_size # Size of population
+        self.population = pygame.sprite.Group() # Population is sprite group
+        self.bird_images = bird_images # Bird images
+
+        # Populate with new birds
         for _ in range(self.pop_size):
-            self.population.add(Bird(bird_images))
+            self.population.add(Bird(bird_images, gh))
+        
+        # Gene History
+        self.gh = gh
+        # Best bird ever in current generation
+        self.best_fitness = 0
+        pass
+
+    # Reset to previous state
+    def reset(self):
+        self.population.empty()
+        for _ in range(self.pop_size):
+            self.population.add(Bird(self.bird_images, self.gh))
 
         self.best_fitness = 0
         pass
 
-    def update(self):
+    # Update every frame
+    def update(self, pipes):
+        best_bird = None
         # Update Bird population
         for bird in self.population:
-            bird.update()
-        pass
+            bird.update(pipes)
+            # Set the best bird
+            if bird.fitness > self.best_fitness:
+                self.best_fitness = bird.fitness
+                best_bird = bird
+        return best_bird
 
+    # Draw population
     def draw(self, window):
-        self.population.draw(window)
+        for bird in self.population:
+            if not bird.on_ground:
+                bird.draw(window)
         pass
 
+    # Check if all are dead
     def all_dead(self):
         for s in self.population.sprites():
+            # False if even 1 is alive
             if s.alive:
                 return False
         return True
-
+    
+    # Collision handling
     def collision(self, pipes, ground):
         bird_sprites = self.population.sprites()
         # Collision Detection
         for b in range(self.pop_size):
+            # Collision with pipes
             collision_pipes = pygame.sprite.spritecollide(bird_sprites[b], pipes, False)
+            # Collision with grounds
             collision_ground = pygame.sprite.spritecollide(bird_sprites[b], ground, False)
+            # kill bird either way :)
             if collision_pipes or collision_ground:
                 bird_sprites[b].alive = False
-                global fitness
-                if bird_sprites[b].fitness > self.best_fitness:
-                    self.best_fitness = bird_sprites[b].fitness
         pass
