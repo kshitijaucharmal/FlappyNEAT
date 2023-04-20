@@ -31,8 +31,22 @@ class Genome:
         for _ in range(self.n_outputs):
             self.nodes.append(Node(self.total_nodes, 1))
             self.total_nodes += 1
-
         pass
+
+    def clone(self):
+        clone = Genome(self.gh)
+        clone.total_nodes = self.total_nodes
+        clone.nodes.clear()
+        clone.genes.clear()
+
+        for i in range(len(self.nodes)):
+            clone.nodes.append(self.nodes[i].clone())
+
+        for i in range(len(self.genes)):
+            clone.genes.append(self.genes[i].clone())
+
+        clone.connect_genes()
+        return clone
 
     # Gene with inno exists
     def exists(self, inno):
@@ -89,8 +103,19 @@ class Genome:
             self.add_node()
         pass
 
+    def get_node(self, n):
+        for i in range(len(self.nodes)):
+            if self.nodes[i].number == n:
+                return self.nodes[i]
+        print("Node not found : Something's Wrong")
+        return None
+
     # Connect genes to get ready for output calculation
     def connect_genes(self):
+        for i in range(len(self.genes)):
+            self.genes[i].in_node = self.get_node(self.genes[i].in_node.number)
+            self.genes[i].out_node = self.get_node(self.genes[i].out_node.number)
+
         for i in range(len(self.nodes)):
             self.nodes[i].in_genes.clear()
 

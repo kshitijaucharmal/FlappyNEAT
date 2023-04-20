@@ -36,6 +36,12 @@ def quit_game():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                reset()
+            if event.key == pygame.K_q:
+                pygame.quit()
+                exit()
 
 # Setup
 gh = GeneHistory(n_inputs, n_outputs)

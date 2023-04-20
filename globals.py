@@ -4,7 +4,7 @@ import pygame
 win_width = 551
 win_height = 720
 
-pop_size = 100
+pop_size = 30
 
 # Images
 bird_images = [pygame.image.load("assets/bird_down.png"),

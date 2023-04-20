@@ -7,7 +7,7 @@ from neat.genome import Genome
 from globals import win_width, win_height, bird_start_position, y_pos_ground
 
 class Bird(pygame.sprite.Sprite):
-    def __init__(self, bird_images, gh):
+    def __init__(self, bird_images, gh, clone=False):
         pygame.sprite.Sprite.__init__(self)
         self.bird_images = bird_images
         self.image = bird_images[0]
@@ -21,16 +21,24 @@ class Bird(pygame.sprite.Sprite):
 
         self.fitness = 0 # Fitness function
         self.gh = gh # The genome history
-        self.brain = Genome(gh) # The genome that acts as a brain
 
-        # Random mutations for brain
-        for _ in range(10):
-            self.brain.mutate()
+        # Make brain and clone if not a clone
+        if not clone:
+            self.brain = Genome(gh) # The genome that acts as a brain
+            # Random mutations for brain at start
+            for _ in range(10):
+                self.brain.mutate()
         pass
 
     # Draw to screen
     def draw(self, screen):
         screen.blit(self.image, self.rect)
+        pass
+
+    def clone(self):
+        child = Bird(self.bird_images, self.gh, True)
+        child.brain = self.brain.clone()
+        return child
 
     # Update each frame
     def update(self, pipes):

@@ -1,4 +1,5 @@
 import pygame
+import random
 # Import bird images
 from globals import bird_images
 
@@ -23,9 +24,17 @@ class Population:
 
     # Reset to previous state
     def reset(self):
+        parents = self.population.sprites()
+        # Sort parents
+        parents.sort(key=lambda x : x.fitness, reverse=True)
+
         self.population.empty()
-        for _ in range(self.pop_size):
-            self.population.add(Bird(self.bird_images, self.gh))
+
+        # Random Population
+        for i in range(self.pop_size):
+            bird = parents[random.randint(0, len(parents)/10)].clone()
+            bird.brain.mutate()
+            self.population.add(bird)
 
         self.best_fitness = 0
         pass

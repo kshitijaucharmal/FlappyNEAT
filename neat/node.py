@@ -28,6 +28,7 @@ class Node:
     def clone(self):
         n = Node(self.number, self.layer)
         n.output = self.output
+        n.pos = self.pos
         return n
 
     # Calculate output value
