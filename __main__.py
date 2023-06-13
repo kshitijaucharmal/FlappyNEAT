@@ -3,7 +3,6 @@ from sys import exit
 import random
 
 # Game Files
-from Bird import Bird
 from Pipe import Pipe, PipePair
 from Ground import Ground
 from population import Population
