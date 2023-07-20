@@ -32,7 +32,7 @@ class Population:
 
         # Random Population
         for i in range(self.pop_size):
-            bird = parents[random.randint(0, len(parents)/10)].clone()
+            bird = parents[random.randint(0, len(parents)//10)].clone()
             bird.brain.mutate()
             self.population.add(bird)
 
