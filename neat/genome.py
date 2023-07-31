@@ -2,7 +2,6 @@ from neat.node import Node
 from neat.gene import Gene
 
 import random
-import pygame
 
 class Genome:
     def __init__(self, gh):
