@@ -67,6 +67,12 @@ These parameters include population size, mutation rates, and various other sett
 - [Alisha Shaikh](https://github.com/alisha971) - Game Development
 - [Tanish Chaudhari](https://github.com/Cratan228) - Project Management
 
+## Contributing
+
+Contributions are always welcome!!
+
+Just fork the repository and create a pull request with your desired changes, we'll be sure to review them as soon as possible!
+
 ## Acknowledgments
 
 We would like to express our gratitude to the creators of the NEAT algorithm for their pioneering work in neuroevolution.
