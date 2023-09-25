@@ -1,2 +1,3 @@
 # INC-Project
-The NEAT Algorithm made from scratch learns to play the game color switch also made from scratch in python
+
+The NEAT Algorithm made from scratch learns to play the game flappy-bird also made from scratch in python
