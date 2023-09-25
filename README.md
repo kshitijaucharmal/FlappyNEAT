@@ -25,8 +25,8 @@ Our goal was to evolve neural networks capable of playing the game and achieving
 
 ## Repository Structure
 
-- `neat` folder: Implementation of the NEAT algorithm.
-- `Bird.py`: The Flappy Bird class.
+- `neat`: Folder containing implementation of the NEAT algorithm.
+- `game`: The Flappy Bird game folder (All Game specific files).
 - `__main__.py`: The main script to run NEAT on the Flappy Bird game.
 - `README.md`: You're reading it right now!
 
