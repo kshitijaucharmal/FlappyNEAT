@@ -64,7 +64,7 @@ These parameters include population size, mutation rates, and various other sett
 ## Contributors
 
 - [Kshitij Aucharmal](https://github.com/kshitijaucharmal) - Algorithm Implementation
-- [Alisha Shaikh](https://github.com/contributor1) - Game Development
+- [Alisha Shaikh](https://github.com/alisha971) - Game Development
 - [Tanish Chaudhari](https://github.com/Cratan228) - Project Management
 
 ## Acknowledgments
