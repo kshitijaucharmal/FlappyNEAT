@@ -3,16 +3,16 @@ from sys import exit
 import random
 
 # Game Files
-from Pipe import Pipe, PipePair
-from Ground import Ground
-from population import Population
+from game.Pipe import Pipe, PipePair
+from game.Ground import Ground
+from game.population import Population
 
 # NEAT Files
 from neat.genome import Genome
 from neat.geneh import GeneHistory
 
 # Importing global constants
-from globals import *
+from game.globals import *
 
 pygame.init()
 clock = pygame.time.Clock()

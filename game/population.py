@@ -1,10 +1,10 @@
 import pygame
 import random
 # Import bird images
-from globals import bird_images
+from game.globals import bird_images
 
 # Bird class
-from Bird import Bird
+from game.Bird import Bird
 
 class Population:
     def __init__(self, gh, pop_size=100):
