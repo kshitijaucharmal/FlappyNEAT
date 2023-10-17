@@ -137,10 +137,10 @@ class Genome:
         self.connect_genes()
 
         # calculate layer wise
-        for l in range(2, self.gh.highest_hidden + 1):
+        for layer in range(2, self.gh.highest_hidden + 1):
             nodes_in_layer = []
             for n in range(len(self.nodes)):
-                if self.nodes[n].layer == l:
+                if self.nodes[n].layer == layer:
                     nodes_in_layer.append(self.nodes[n])
 
             for n in range(len(nodes_in_layer)):
@@ -166,12 +166,12 @@ class Genome:
     def calculate_compatibility(self, partner):
         try:
             p1_highest_inno = max([(a.inno) for a in self.genes])
-        except:
+        except Exception:
             p1_highest_inno = 0
 
         try:
             p2_highest_inno = max([(a.inno) for a in partner.genes])
-        except:
+        except Exception:
             p2_highest_inno = 0
 
         # Set highest inno (Should be one with highest fitness)

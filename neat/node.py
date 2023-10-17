@@ -2,11 +2,11 @@ import pygame
 import math
 
 class Node:
-    def __init__(self, n, l):
+    def __init__(self, node, layer):
         # Number in the network
-        self.number = n
+        self.number = node
         # On Layer
-        self.layer = l
+        self.layer = layer
         # final output to pass on
         self.output = 0
         # all genes coming to this node
