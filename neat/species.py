@@ -1,5 +1,3 @@
-from neat.genome import Genome
-from neat.geneh import GeneHistory
 
 class Species:
     def __init__(self, mem):

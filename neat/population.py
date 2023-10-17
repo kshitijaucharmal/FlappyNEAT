@@ -1,4 +1,3 @@
-import pygame
 from neat.genome import Genome
 from neat.geneh import GeneHistory
 from neat.species import Species

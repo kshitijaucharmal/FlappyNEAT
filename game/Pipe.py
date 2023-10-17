@@ -1,9 +1,7 @@
 import pygame
-from sys import exit
-import random
 
 # Required global imports
-from game.globals import win_width, win_height, bird_start_position, scroll_speed
+from game.globals import win_width, scroll_speed
 
 class Pipe(pygame.sprite.Sprite):
     def __init__(self, x, y, image, pipe_type):

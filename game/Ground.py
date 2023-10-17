@@ -1,8 +1,6 @@
 import pygame
-from sys import exit
-import random
 
-from game.globals import win_height, win_width
+from game.globals import win_width
 
 # Scroll
 scroll_speed = 3
