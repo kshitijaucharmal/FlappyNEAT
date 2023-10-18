@@ -28,7 +28,7 @@ class Population:
 
     def fitness_sharing(self):
         for i in range(self.pop_len):
-            # For now, fitness_sharing dosen't work
+            # For now, fitness_sharing doesn't work
             self.population[i].adjusted_fitness = self.population[i].fitness
             pass
         pass
