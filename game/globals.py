@@ -4,12 +4,14 @@ import pygame
 win_width = 551
 win_height = 720
 
-pop_size = 30
+pop_size = 100
 
 # Images
-bird_images = [pygame.image.load("assets/bird_down.png"),
-               pygame.image.load("assets/bird_mid.png"),
-               pygame.image.load("assets/bird_up.png")]
+bird_images = [
+    pygame.image.load("assets/bird_down.png"),
+    pygame.image.load("assets/bird_mid.png"),
+    pygame.image.load("assets/bird_up.png"),
+]
 skyline_image = pygame.image.load("assets/background.png")
 ground_image = pygame.image.load("assets/ground.png")
 top_pipe_image = pygame.image.load("assets/pipe_top.png")

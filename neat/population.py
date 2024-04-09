@@ -6,6 +6,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class Population:
     def __init__(self, pop_len, n_inputs, n_outputs):
         self.pop_len = pop_len
@@ -16,7 +17,7 @@ class Population:
 
         for _ in range(pop_len):
             self.population.append(Genome(self.gh))
-            # temp 
+            # temp
             for _ in range(random.randint(10, 50)):
                 self.population[-1].mutate()
 
@@ -29,10 +30,12 @@ class Population:
     def fitness_sharing(self):
         for i in range(self.pop_len):
             # For now, fitness_sharing doesn't work
+            # it should work by just dividing the fitness by the number of
+            # individuals in a species
             self.population[i].adjusted_fitness = self.population[i].fitness
             pass
         pass
-    
+
     def speciate(self):
         # Clear all species
         self.species.clear()
@@ -54,7 +57,7 @@ class Population:
                     self.species.append(Species(self.population[i]))
         if True:
             for s in self.species:
-                print('Species : ', s.get_len())
+                print("Species : ", s.get_len())
         pass
 
     def plot_cluster(self):
@@ -65,19 +68,23 @@ class Population:
             cd = self.population[0].calculate_compatibility(self.population[i])
             values.append(cd)
             yvalues[i] = i
-        plt.plot(values, yvalues, 'ro')
+        plt.plot(values, yvalues, "ro")
         plt.show()
         pass
-    
+
     # Heuristic for testing
     def next(self):
-        self.best_index = self.best_index + 1 if self.best_index <= self.pop_len - 2 else 0
+        self.best_index = (
+            self.best_index + 1 if self.best_index <= self.pop_len - 2 else 0
+        )
         self.best = self.population[self.best_index]
         print(self.best_index)
         pass
 
     def prev(self):
-        self.best_index = self.best_index - 1 if self.best_index > 0 else self.pop_len - 1
+        self.best_index = (
+            self.best_index - 1 if self.best_index > 0 else self.pop_len - 1
+        )
         self.best = self.population[self.best_index]
         print(self.best_index)
         pass

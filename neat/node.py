@@ -1,6 +1,7 @@
 import pygame
 import math
 
+
 class Node:
     def __init__(self, node, layer):
         # Number in the network
@@ -12,7 +13,7 @@ class Node:
         # all genes coming to this node
         self.in_genes = []
         # Sigmoid activation
-        self.sigmoid = lambda x : 1 / (1 + math.exp(-x))
+        self.sigmoid = lambda x: 1 / (1 + math.exp(-x))
 
         # For Showing
         self.color = (255, 255, 255)
@@ -34,7 +35,7 @@ class Node:
     # Calculate output value
     def calculate(self):
         if self.layer == 0:
-            print('No calculations for first layer')
+            print("No calculations for first layer")
             return
 
         s = 0

@@ -3,6 +3,7 @@ from neat.gene import Gene
 
 import random
 
+
 class Genome:
     def __init__(self, gh):
         # Ref to history
@@ -12,7 +13,7 @@ class Genome:
         self.n_outputs = gh.n_outputs
         # Total Nodes (used as ctr)
         self.total_nodes = 0
-        
+
         # Nodes and genes
         self.nodes = []
         self.genes = []
@@ -87,7 +88,7 @@ class Genome:
 
         self.connect_nodes(n1, n2)
         pass
-    
+
     # Random Mutations
     def mutate(self):
         if len(self.genes) == 0:
@@ -126,7 +127,7 @@ class Genome:
     # Get Outputs
     def get_outputs(self, inputs):
         if len(inputs) != self.n_inputs:
-            print('Wrong number of inputs')
+            print("Wrong number of inputs")
             return [-1]
 
         # Input layers outputs are the specified inputs
@@ -188,7 +189,7 @@ class Genome:
         flag = 0
 
         total_weights = 0
-        
+
         for i in range(highest_inno):
             e1 = self.exists(i)
             e2 = partner.exists(i)
@@ -198,7 +199,7 @@ class Genome:
                 total_weights += self.get_weight(i) - partner.get_weight(i)
                 continue
 
-        disjoint = (flag+1) - matching
+        disjoint = (flag + 1) - matching
         excess = highest_inno - flag
 
         if matching == 0:
@@ -251,11 +252,11 @@ class Genome:
 
     # Get Some info
     def get_info(self) -> str:
-        s = 'Genome -----------------------\n'
+        s = "Genome -----------------------\n"
         for g in self.genes:
             s += g.get_info()
 
-        s += '------------------------------'
+        s += "------------------------------"
         return s
 
     def __str__(self):
@@ -266,15 +267,22 @@ class Genome:
         ds.fill((255, 255, 255, 0))
         # Set Positions
         w, h = ds.get_size()
-        vert_gap = h / (self.n_inputs+1)
+        vert_gap = h / (self.n_inputs + 1)
         for i in range(self.n_inputs):
             self.nodes[i].pos = [30, self.nodes[i].number * vert_gap + vert_gap]
-        vert_gap = h / (self.n_outputs+1)
-        for i in range(self.n_inputs, self.n_inputs+self.n_outputs):
-            self.nodes[i].pos = [w - 30, (self.nodes[i].number - self.n_inputs) * vert_gap + vert_gap]
+        vert_gap = h / (self.n_outputs + 1)
+        for i in range(self.n_inputs, self.n_inputs + self.n_outputs):
+            self.nodes[i].pos = [
+                w - 30,
+                (self.nodes[i].number - self.n_inputs) * vert_gap + vert_gap,
+            ]
         vert_gap = h / ((len(self.nodes) - (self.n_inputs + self.n_outputs)) + 1)
-        for i in range(self.n_inputs+self.n_outputs, len(self.nodes)):
-            self.nodes[i].pos = [w/2, (self.nodes[i].number - self.n_inputs - self.n_outputs) * vert_gap + vert_gap]
+        for i in range(self.n_inputs + self.n_outputs, len(self.nodes)):
+            self.nodes[i].pos = [
+                w / 2,
+                (self.nodes[i].number - self.n_inputs - self.n_outputs) * vert_gap
+                + vert_gap,
+            ]
 
         # Show Genes
         for g in self.genes:
