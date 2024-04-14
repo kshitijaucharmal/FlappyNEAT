@@ -33,11 +33,9 @@ class Population:
         self.population.empty()
 
         # Random Population
-        for i in range(self.pop_size):
-            # Don't understand what is happening here, but converting this to int
-            # breaks the whole algorithm, and the birds don't learn
-            x = random.randint(0, len(parents) / 10)
-            bird = parents[x].clone()
+        for _ in range(self.pop_size):
+            parent1 = parents[random.randint(0, len(parents) // 10)]
+            bird = parent1.clone()
             bird.brain.mutate()
             self.population.add(bird)
 

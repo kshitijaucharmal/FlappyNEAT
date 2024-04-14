@@ -36,6 +36,11 @@ class Bird(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
         pass
 
+    def mate(self, partner):
+        child = Bird(self.bird_images, self.gh, True)
+        child.brain = self.brain.crossover(partner.brain)
+        return child
+
     def clone(self):
         child = Bird(self.bird_images, self.gh, True)
         child.brain = self.brain.clone()
