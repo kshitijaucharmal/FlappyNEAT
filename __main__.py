@@ -50,7 +50,7 @@ gh = GeneHistory(n_inputs, n_outputs)
 g = Genome(gh)
 
 # Instantiate Population of birds
-population = Population(gh, pop_size)
+population = Population(n_inputs=4, n_outputs=2, pop_size=pop_size)
 pipes = []
 x_top, x_bottom = 550, 550  # pt from where pipes enter
 
@@ -116,7 +116,7 @@ def spawn_pipes():
     pipes.append(PipePair(top_pipe, bottom_pipe, top, bottom))
 
     # Random time till next pipepair spawns
-    pipe_timer = random.randint(80, 120)
+    pipe_timer = random.randint(50, 60)
     pass
 
 

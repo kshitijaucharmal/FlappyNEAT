@@ -20,7 +20,6 @@ class Bird(pygame.sprite.Sprite):
         self.alive = True
         self.on_ground = False  # Collided with ground
 
-        self.fitness = 0  # Fitness function
         self.gh = gh  # The genome history
 
         # Make brain and clone if not a clone
@@ -55,7 +54,7 @@ class Bird(pygame.sprite.Sprite):
         # Animate Bird
         if self.alive:
             self.image_index += 1
-            self.fitness += 1
+            self.brain.fitness += 1
         if self.image_index >= 30:
             self.image_index = 0
         self.image = self.bird_images[self.image_index // 10]

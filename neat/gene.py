@@ -29,11 +29,6 @@ class Gene:
     def mutate(self):
         if random.random() < 0.1:
             self.weight = random.random() * 4 - 2
-        else:
-            self.weight += random.uniform(-0.02, 0.02)
-            # Clamping
-            self.weight = self.weight if self.weight < 2 else 2
-            self.weight = self.weight if self.weight > -2 else -2
 
     # Get Some info
     def get_info(self):
