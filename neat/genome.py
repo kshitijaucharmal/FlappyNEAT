@@ -339,24 +339,18 @@ class Genome:
         # Set Positions
         w, h = ds.get_size()
         vert_gap = h / (self.n_inputs + 1)
-
-        # for input layer nodes
         for i in range(self.n_inputs):
             self.nodes[i].pos = [30, self.nodes[i].number * vert_gap + vert_gap]
-
-        # for output layer nodes
         vert_gap = h / (self.n_outputs + 1)
         for i in range(self.n_inputs, self.n_inputs + self.n_outputs):
             self.nodes[i].pos = [
                 w - 30,
                 (self.nodes[i].number - self.n_inputs) * vert_gap + vert_gap,
             ]
-
-        # for hidden layer nodes
         vert_gap = h / ((len(self.nodes) - (self.n_inputs + self.n_outputs)) + 1)
         for i in range(self.n_inputs + self.n_outputs, len(self.nodes)):
             self.nodes[i].pos = [
-                self.nodes[i].layer * 120,
+                w / 2,
                 (self.nodes[i].number - self.n_inputs - self.n_outputs) * vert_gap
                 + vert_gap,
             ]
@@ -367,5 +361,4 @@ class Genome:
         # Show nodes
         for n in self.nodes:
             n.show(ds)
-
-    pass
+        pass

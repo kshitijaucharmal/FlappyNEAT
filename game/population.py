@@ -8,6 +8,7 @@ from game.globals import bird_images
 from game.Bird import Bird
 
 
+# TODO: Modify this to be used as a gym env
 class Population:
     def __init__(self, gh, pop_size=100):
         self.pop_size = pop_size  # Size of population
@@ -36,8 +37,11 @@ class Population:
         for i in range(self.pop_size):
             # Don't understand what is happening here, but converting this to int
             # breaks the whole algorithm, and the birds don't learn
-            x = random.randint(0, len(parents) / 10)
-            bird = parents[x].clone()
+            # x = random.randint(0, len(parents) / 10)
+            # bird = parents[x].clone()
+            parent1 = parents[random.randint(0, len(parents) // 10)]
+            parent2 = parents[random.randint(0, len(parents) // 10)]
+            bird = parent1.mate(parent2)
             bird.brain.mutate()
             self.population.add(bird)
 
