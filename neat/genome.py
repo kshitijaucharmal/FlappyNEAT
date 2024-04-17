@@ -1,4 +1,3 @@
-from os import confstr, popen
 from neat.node import Node
 from neat.gene import Gene
 
