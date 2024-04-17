@@ -1,10 +1,7 @@
 from neat.genome import Genome
 from neat.geneh import GeneHistory
 from neat.species import Species
-
 import random
-import numpy as np
-import matplotlib.pyplot as plt
 
 
 class Population:
@@ -17,59 +14,87 @@ class Population:
 
         for _ in range(pop_len):
             self.population.append(Genome(self.gh))
-            # temp
-            for _ in range(random.randint(10, 50)):
-                self.population[-1].mutate()
+            # for _ in range(random.randint(10, 30)):
+            #     self.population[-1].mutate()
 
         self.best_index = 0
         self.best = self.population[self.best_index]
-        self.max_species = 5
         self.species = []
-        pass
-
-    def fitness_sharing(self):
-        for i in range(self.pop_len):
-            # For now, fitness_sharing doesn't work
-            # it should work by just dividing the fitness by the number of
-            # individuals in a species
-            self.population[i].adjusted_fitness = self.population[i].fitness
-            pass
+        self.global_avg = 0
         pass
 
     def speciate(self):
-        # Clear all species
+        species_assigned = [(False) for _ in range(len(self.population))]
         self.species.clear()
-        # add first member in a species
-        self.species.append(Species(self.population[0]))
-        for i in range(1, self.pop_len):
-            accepted = False
-            for s in range(len(self.species)):
-                accepted = self.species[s].check(self.population[i])
-                if accepted:
-                    self.species[s].add(self.population[i])
-                    break
-            if not accepted:
-                if len(self.species) >= self.max_species:
-                    # get species with lowest no. of members
-                    lowest = np.argmin([(len(s.members)) for s in self.species])
-                    self.species[lowest].add(self.population[i])
-                else:
-                    self.species.append(Species(self.population[i]))
-        if True:
-            for s in self.species:
-                print("Species : ", s.get_len())
+
+        while False in species_assigned:
+            # select random indi
+            p = random.randint(0, self.pop_len - 1)
+            while species_assigned[p]:
+                p = random.randint(0, self.pop_len - 1)
+
+            # Set it as the rep of species
+            rep = self.population[p]
+            sp = Species(rep)
+            species_assigned[p] = True
+
+            # Check against others
+            for i in range(self.pop_len):
+                if i == p or species_assigned[i]:
+                    continue
+                if sp.check(self.population[i]):
+                    sp.add(self.population[i])
+                    species_assigned[i] = True
+                pass
+            self.species.append(sp)
+
+        # l = [(len(sp.members)) for sp in self.species]
+        # print(l)
         pass
 
-    def plot_cluster(self):
-        values = []
-        # Append 0 for starting brain
-        yvalues = np.zeros(self.pop_len)
+    def set_allowed_offspring(self):
+        # Calculate fitness here
+        ###################
+
+        total_fitness = 0
+        for i in range(len(self.species)):
+            self.species[i].adjust_fitness()
+            total_fitness += self.species[i].get_average_fitness()
+
+        self.global_avg = total_fitness / len(self.species)
+        for i in range(len(self.species)):
+            self.species[i].allowed_offspring = round(
+                self.species[i].average_fitness
+                / self.global_avg
+                * len(self.species[i].members)
+            )
+            # print(
+            #     self.species[i].average_fitness,
+            #     self.global_avg,
+            #     len(self.species[i].members),
+            #     self.species[i].allowed_offspring,
+            # )
+
+    def reset(self):
+        self.speciate()
+        self.set_allowed_offspring()
+
+        new_pop = []
+        sp_lens = []
+        for sp in self.species:
+            sp_lens.append(len(sp.members))
+            for _ in range(sp.allowed_offspring):
+                new_pop.append(sp.give_offspring())
+
+        print(len(new_pop), sp_lens)
+
         for i in range(self.pop_len):
-            cd = self.population[0].calculate_compatibility(self.population[i])
-            values.append(cd)
-            yvalues[i] = i
-        plt.plot(values, yvalues, "ro")
-        plt.show()
+            if i < len(new_pop):
+                self.population[i] = new_pop[i]
+            else:
+                self.population[i] = Genome(self.gh)
+                # for _ in range(random.randint(10, 30)):
+                #     self.population[i].mutate()
         pass
 
     # Heuristic for testing
