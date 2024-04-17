@@ -23,7 +23,7 @@ class Species:
             self.rep = self.members[-1]
         pass
 
-    # Get a random parent based on roulette wheel method, to give more priority to higer fitness members
+    # Get a random parent based on roulette wheel method, to give more priority to higher fitness members
     def get_random_parent(self):
         total_priority = sum([(m.adjusted_fitness) for m in self.members])
         selection = random.uniform(0, total_priority)
